@@ -1,0 +1,25 @@
+name: ESP32 CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y cppcheck python3-pip
+          pip install platformio
+
+      - name: Run cppcheck static analysis
+        run: cppcheck --enable=all --inconclusive --std=c++17 src/
+
+      - name: Build firmware
+        run: platformio run
